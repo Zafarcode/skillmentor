@@ -1,4 +1,5 @@
 import RootProvider from "@/components/global/provider";
+import SiteHeader from "@/components/global/site-header";
 import "@/styles/globals.css";
 import { baseURL, createMetadata } from "@/utils/metadata";
 import { Viewport } from "next";
@@ -32,7 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <RootProvider>{children}</RootProvider>
+        <RootProvider>
+          <SiteHeader />
+          {children}
+        </RootProvider>
       </body>
     </html>
   );
