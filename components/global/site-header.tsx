@@ -1,4 +1,6 @@
 "use client";
+import LogoIcon from "@/components/LogoIcon";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
@@ -13,7 +15,6 @@ import { Heart, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { buttonVariants } from "../ui/button";
 
 const SiteHeader = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -21,15 +22,13 @@ const SiteHeader = () => {
   const pathname = usePathname();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-5 bg-gradient-to-b from-black/100 to-transparent">
+    <header className="fixed top-0 left-0 right-0 z-50 py-5 bg-black/30 backdrop-blur-lg">
       <div className="container">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-20">
-            <Link
-              className="text-xl font-bold bg-gradient-to-l to-white to-50% from-green-500 from-45% text-transparent bg-clip-text"
-              href="/"
-            >
-              CinemaTube
+            <Link className="text-xl text-white" href="/">
+              <LogoIcon />
+              <span className="sr-only">CinemaTube logo</span>
             </Link>
 
             <NavigationMenu className="hidden lg:block">
