@@ -1,5 +1,4 @@
 "use client";
-import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
@@ -10,18 +9,16 @@ import {
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { navList } from "@/mock";
-import { useMediaQuery } from "@uidotdev/usehooks";
 import { Heart, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { buttonVariants } from "../ui/button";
 
 const SiteHeader = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const pathname = usePathname();
-
-  const isMobile = useMediaQuery("only screen and (max-width: 1024px");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 py-5 bg-gradient-to-b from-black/100 to-transparent">
@@ -62,28 +59,11 @@ const SiteHeader = () => {
               />
             </search>
 
-            <Link
-              className={cn(
-                buttonVariants({
-                  size: isMobile ? "sm" : "icon",
-                }),
-                "bg-transparent text-white border border-white",
-                isMobile && "px-2",
-              )}
-              href="/favorite"
-            >
+            <Link className={cn("bg-transparent text-white border border-white", buttonVariants())} href="/favorite">
               <Heart />
             </Link>
 
-            <Link
-              className={cn(
-                buttonVariants({
-                  size: isMobile ? "sm" : "default",
-                }),
-                "bg-transparent text-white border border-white",
-              )}
-              href="/login"
-            >
+            <Link className={cn("bg-transparent text-white border border-white", buttonVariants())} href="/login">
               Kirish
             </Link>
 
