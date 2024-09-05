@@ -34,6 +34,7 @@ export const navList: { id: number; label: string; href: string }[] = [
 export const films: {
   id: number;
   title: string;
+  slug: string;
   poster: string;
   rating: number;
   categories: string[];
@@ -42,6 +43,7 @@ export const films: {
   {
     id: 1,
     title: "The Shawshank Redemption",
+    slug: "the-shawshank-redemption",
     poster: "/image.png",
     rating: 9.3,
     categories: ["Drama", "Crime"],
@@ -51,6 +53,7 @@ export const films: {
   {
     id: 2,
     title: "The Godfather",
+    slug: "the-godfather",
     poster: "/image.png",
     rating: 9.2,
     categories: ["Drama", "Crime"],
@@ -60,6 +63,7 @@ export const films: {
   {
     id: 3,
     title: "The Dark Knight",
+    slug: "the-dark-knight",
     poster: "/image.png",
     rating: 9.0,
     categories: ["Action", "Crime", "Drama"],
@@ -69,6 +73,7 @@ export const films: {
   {
     id: 4,
     title: "Inception",
+    slug: "inception",
     poster: "/image.png",
     rating: 8.8,
     categories: ["Action", "Sci-Fi", "Thriller"],
@@ -78,6 +83,7 @@ export const films: {
   {
     id: 5,
     title: "The Lord of the Rings: The Fellowship of the Ring",
+    slug: "the-lord-of-the-rings-the-fellowship-of-the-ring",
     poster: "/image.png",
     rating: 8.8,
     categories: ["Adventure", "Fantasy"],

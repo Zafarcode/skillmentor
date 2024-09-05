@@ -55,7 +55,7 @@ const SiteHeader = () => {
               <Input
                 className="w-96 bg-transparent border border-white placeholder:text-white text-white"
                 type="search"
-                placeholder="Qidirish..."
+                placeholder="Izlash"
               />
             </search>
 
@@ -63,7 +63,7 @@ const SiteHeader = () => {
               <Heart />
             </Link>
 
-            <Link className={cn("bg-transparent text-white border border-white", buttonVariants())} href="/login">
+            <Link className={cn("bg-transparent text-white border border-white", buttonVariants())} href="/auth/login">
               Kirish
             </Link>
 

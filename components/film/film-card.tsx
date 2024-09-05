@@ -1,14 +1,17 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function FilmCard({
   title,
+  slug,
   poster,
   rating,
   categories,
 }: {
   title: string;
+  slug: string;
   poster: string;
   rating: number;
   categories: string[];
@@ -16,7 +19,7 @@ export default function FilmCard({
   return (
     <Card className="w-full max-w-sm rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl border-none">
       <CardContent className="p-0">
-        <div className="relative group">
+        <Link className="relative group" href={"/films/" + slug}>
           <Image
             src={poster}
             alt={title}
@@ -35,7 +38,7 @@ export default function FilmCard({
             </div>
             <div className="text-sm text-muted-foreground">{categories.join(", ")}</div>
           </div>
-        </div>
+        </Link>
       </CardContent>
     </Card>
   );
