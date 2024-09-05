@@ -1,6 +1,5 @@
 "use client";
 import LogoIcon from "@/components/LogoIcon";
-import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
@@ -11,18 +10,40 @@ import {
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { navList } from "@/mock";
-import { Heart, Menu } from "lucide-react";
+import { Heart, Menu, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import { useEffect, useState } from "react";
 
 const SiteHeader = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const pathname = usePathname();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-5 bg-black/30 backdrop-blur-lg">
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300",
+        isScrolled ? "bg-black/30 backdrop-blur-lg" : "bg-transparent",
+      )}
+    >
       <div className="container">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-20">
@@ -58,16 +79,16 @@ const SiteHeader = () => {
               />
             </search>
 
-            <Link className={cn("bg-transparent text-white border border-white", buttonVariants())} href="/favorite">
+            <Link className="bg-transparent text-white" href="/favorite">
               <Heart />
             </Link>
 
-            <Link className={cn("bg-transparent text-white border border-white", buttonVariants())} href="/auth/login">
-              Kirish
+            <Link className="flex gap-1 items-center bg-transparent text-white" href="/auth/login">
+              <UserIcon /> Kirish
             </Link>
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger className="block lg:hidden">
+              <SheetTrigger className="block lg:hidden text-white">
                 <Menu className="w-8 h-8 text-white" />
                 <span className="sr-only">Menu icon</span>
               </SheetTrigger>
