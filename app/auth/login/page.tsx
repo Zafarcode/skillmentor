@@ -2,9 +2,9 @@ import LoginComponent from "@/components/auth/login";
 
 const Login = () => {
   return (
-    <section>
+    <main>
       <LoginComponent />
-    </section>
+    </main>
   );
 };
 

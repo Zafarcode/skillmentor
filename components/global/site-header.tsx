@@ -10,10 +10,11 @@ import {
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { navList } from "@/mock";
-import { Heart, Menu, UserIcon } from "lucide-react";
+import { EllipsisVertical, Heart, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ModeToggle } from "./mode-toggle";
 
 const SiteHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,16 +39,11 @@ const SiteHeader = () => {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300",
-        isScrolled ? "bg-black/30 backdrop-blur-lg" : "bg-transparent",
-      )}
-    >
+    <header className="sticky top-0 left-0 right-0 z-50 py-5 bg-white dark:bg-black">
       <div className="container">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-20">
-            <Link className="text-xl text-white" href="/">
+            <Link className="text-xl" href="/">
               <LogoIcon />
               <span className="sr-only">CinemaTube logo</span>
             </Link>
@@ -58,7 +54,10 @@ const SiteHeader = () => {
                   <NavigationMenuItem key={item.id}>
                     <NavigationMenuLink asChild>
                       <Link
-                        className={cn("text-gray-400 hover:text-white", pathname === item.href ? "text-white" : "")}
+                        className={cn(
+                          "text-gray-400 relative after:content-[''] after:w-0 after:h-[2px] after:absolute after:top-[110%] after:left-0 after:right-0 after:bg-primary after:transition-all after:duration-300 after:rounded-md after:mx-auto",
+                          pathname === item.href ? "after:w-full" : "",
+                        )}
                         href={item.href}
                       >
                         {item.label}
@@ -70,31 +69,29 @@ const SiteHeader = () => {
             </NavigationMenu>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3">
             <search className="hidden lg:block">
-              <Input
-                className="w-96 bg-transparent border border-white placeholder:text-white text-white"
-                type="search"
-                placeholder="Izlash"
-              />
+              <Input className="w-96 border " type="search" placeholder="Izlash" />
             </search>
 
-            <Link className="bg-transparent text-white" href="/favorite">
+            <Link className="bg-transparent" href="/favorite">
               <Heart />
             </Link>
 
-            <Link className="flex gap-1 items-center bg-transparent text-white" href="/auth/login">
-              <UserIcon /> Kirish
+            <ModeToggle />
+
+            <Link className="flex gap-1 items-center bg-transparent" href="/auth/login">
+              <UserIcon /> <span className="hidden lg:block">Kirish</span>
             </Link>
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger className="block lg:hidden text-white">
-                <Menu className="w-8 h-8 text-white" />
+              <SheetTrigger className="block lg:hidden">
+                <EllipsisVertical className="w-7 h-7" />
                 <span className="sr-only">Menu icon</span>
               </SheetTrigger>
-              <SheetContent className="flex flex-col bg-primary items-center justify-start border-primary text-center">
-                <SheetTitle className="pt-5 text-xl font-bold bg-gradient-to-l to-white to-50% from-green-500 from-45% text-transparent bg-clip-text">
-                  Menu
+              <SheetContent className="flex flex-col items-center justify-start border-none text-center">
+                <SheetTitle>
+                  <LogoIcon />
                 </SheetTitle>
                 <SheetDescription className="sr-only">Untitled - movies and tv series database</SheetDescription>
 
