@@ -37,6 +37,7 @@ export const films: {
   slug: string;
   poster: string;
   rating: number;
+  year: number;
   categories: string[];
   description: string;
 }[] = [
@@ -46,6 +47,7 @@ export const films: {
     slug: "the-shawshank-redemption",
     poster: "/image.png",
     rating: 9.3,
+    year: 1994,
     categories: ["Drama", "Crime"],
     description:
       "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
@@ -56,6 +58,7 @@ export const films: {
     slug: "the-godfather",
     poster: "/image.png",
     rating: 9.2,
+    year: 1972,
     categories: ["Drama", "Crime"],
     description:
       "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
@@ -66,6 +69,7 @@ export const films: {
     slug: "the-dark-knight",
     poster: "/image.png",
     rating: 9.0,
+    year: 2008,
     categories: ["Action", "Crime", "Drama"],
     description:
       "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
@@ -76,6 +80,7 @@ export const films: {
     slug: "inception",
     poster: "/image.png",
     rating: 8.8,
+    year: 2010,
     categories: ["Action", "Sci-Fi", "Thriller"],
     description:
       "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea in the mind of a CEO.",
@@ -86,6 +91,7 @@ export const films: {
     slug: "the-lord-of-the-rings-the-fellowship-of-the-ring",
     poster: "/image.png",
     rating: 8.8,
+    year: 2001,
     categories: ["Adventure", "Fantasy"],
     description:
       "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
