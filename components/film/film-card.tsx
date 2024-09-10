@@ -34,7 +34,8 @@ export default function FilmCard({
               <StarIcon className="w-5 h-5 fill-primary" />
               <span className="font-medium">{rating}</span>
             </div>
-            <h3 className="text-lg font-bold mb-2">{title.slice(0, 20)}</h3>
+            <h3 className="text-lg font-bold mb-2">{title ? title.slice(0, 20) : "No title available"}</h3>
+
             <div className="flex items-center justify-between gap-4 mb-2">
               <p className="text-sm text-gray-400">{year}</p>
 
