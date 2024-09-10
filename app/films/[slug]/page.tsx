@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { films } from "@/mock";
 import { Film } from "@/types";
 
-import { ClockIcon, HeartIcon, ListIcon, MoveLeftIcon, PlayIcon, StarIcon } from "lucide-react";
+import { ClockIcon, HeartIcon, ListIcon, PlayIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,8 +15,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
     <main className="pt-28">
       <div className="container">
         <Link className="flex gap-2 mb-5" href="http://localhost:3000/films">
-          <MoveLeftIcon />
-
+          &#8636;
           <p>Ortga</p>
         </Link>
 
@@ -79,7 +78,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
                     </div>
                   </Button>
                   <TooltipContent className="w-40 absolute right-0 bottom-1">
-                    <p>Sevimliga qo'shish</p>
+                    <p>Sevimliga qo&apos;shish</p>
                   </TooltipContent>
                 </TooltipTrigger>
               </Tooltip>
@@ -88,7 +87,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
         </div>
 
         <div>
-          <h2 className="font-bold text-2xl mb-16">O'xshash filmlar</h2>
+          <h2 className="font-bold text-2xl mb-16">O&apos;xshash filmlar</h2>
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {films.map((film) => (

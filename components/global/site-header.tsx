@@ -13,30 +13,13 @@ import { navList } from "@/mock";
 import { EllipsisVertical, Heart, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ModeToggle } from "./mode-toggle";
 
 const SiteHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   const pathname = usePathname();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <header className="sticky top-0 left-0 right-0 z-50 py-5 bg-white dark:bg-black">
@@ -55,7 +38,7 @@ const SiteHeader = () => {
                     <NavigationMenuLink asChild>
                       <Link
                         className={cn(
-                          "text-gray-400 relative after:content-[''] after:w-0 after:h-[2px] after:absolute after:top-[110%] after:left-0 after:right-0 after:bg-primary after:transition-all after:duration-300 after:rounded-md after:mx-auto",
+                          "text-zinc-800 relative after:content-[''] after:w-0 after:h-[2px] after:absolute after:top-[110%] after:left-0 after:right-0 after:bg-primary after:transition-all after:duration-300 after:rounded-md after:mx-auto",
                           pathname === item.href ? "after:w-full" : "",
                         )}
                         href={item.href}

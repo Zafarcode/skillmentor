@@ -11,8 +11,8 @@ const LoginComponent = () => {
           <span className="sr-only">CinemaTube logo</span>
           <h1 className="text-3xl lg:text-5xl font-bold py-5">Kodni kiriting</h1>
           <p className="text-base lg:text-lg mb-5">
-            <Link className="underline text-gray-500" href="https://t.me/wordwondersbot">
-              @cinematubebot
+            <Link className="underline text-gray-500" href="https://t.me/cinematuberobot" target="blank">
+              @cinematuberobot
             </Link>{" "}
             telegram botiga kiring va 1 daqiqalik kodingizni oling.
           </p>
