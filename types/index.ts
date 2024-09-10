@@ -14,3 +14,15 @@ export type Film = {
   categories: string[];
   description: string;
 };
+
+
+
+export type Multfilm = {
+  id: number;
+  title: string;
+  slug: string;
+  poster: string;
+  rating: number;
+  categories: string[];
+  description: string;
+};
