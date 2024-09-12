@@ -4,6 +4,10 @@ import { HeartIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+const years = ["None", 1990, 2000, 2010, 2020];
+const genres = ["None", "Action", "Drama", "Comedy"];
+const sortOptions = ["Popularity Desc", "Popularity Asc", "Year Desc", "Year Asc"];
+
 export default function FilmCard({
   title,
   slug,
