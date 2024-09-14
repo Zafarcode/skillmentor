@@ -4,7 +4,7 @@ import { HeartIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function SimilarFilm({
+export default function Similartv({
   title,
   slug,
   poster,
@@ -20,7 +20,7 @@ export default function SimilarFilm({
   return (
     <Card className="w-full h-full max-w-sm overflow-hidden shadow-none border-none rounded-t-lg rounded-b-none bg-transparent">
       <CardContent className="p-0">
-        <Link className="relative group" href={"/films/" + slug}>
+        <Link className="relative group" href={"/tv/" + slug}>
           <Image
             src={poster}
             alt={title}

@@ -9,12 +9,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
-  const selectedFilm = tv.find((tv) => tv.slug === slug) as Film;
+  const selectedtv = tv.find((tv) => tv.slug === slug) as Film;
 
   return (
     <main className="pt-28">
       <div className="container">
-        <Link className="flex gap-2 mb-5" href="http://localhost:3000/tv">
+        <Link className="flex gap-2 mb-5" href="/tv">
           <MoveLeftIcon />
 
           <p>Ortga</p>
@@ -23,8 +23,8 @@ const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
         <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="relative rounded-lg overflow-hidden">
             <Image
-              src={selectedFilm?.poster}
-              alt={selectedFilm.title}
+              src={selectedtv?.poster}
+              alt={selectedtv.title}
               width={400}
               height={600}
               className="w-full h-auto object-cover "
@@ -35,14 +35,14 @@ const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
             </Button>
           </div>
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold ">{selectedFilm.title}</h1>
+            <h1 className="text-3xl font-bold ">{selectedtv.title}</h1>
             <div className="flex items-center gap-2 ">
               <StarIcon className="w-5 h-5 fill-primary" />
-              <span>{selectedFilm.rating}</span>
+              <span>{selectedtv.rating}</span>
             </div>
             <div className="flex items-center gap-2 ">
               <ListIcon className="w-5 h-5" />
-              <span>{selectedFilm.categories.join(",")}</span>
+              <span>{selectedtv.categories.join(",")}</span>
             </div>
             <div className="flex items-center gap-2 ">
               <ClockIcon className="w-5 h-5" />
@@ -52,7 +52,7 @@ const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
               <span className="font-bold">Batafsil</span>
             </div>
             <div className="prose">
-              <p>{selectedFilm.description}</p>
+              <p>{selectedtv.description}</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center">
@@ -88,7 +88,7 @@ const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
         </div>
 
         <div>
-          <h2 className="font-bold text-2xl mb-16">O&apos;xshash tv</h2>
+          <h2 className="font-bold text-2xl mb-16">O&apos;xshash Tv</h2>
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {tv.map((tv) => (
