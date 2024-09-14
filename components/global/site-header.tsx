@@ -38,7 +38,7 @@ const SiteHeader = () => {
                     <NavigationMenuLink asChild>
                       <Link
                         className={cn(
-                          "text-zinc-800 relative after:content-[''] after:w-0 after:h-[2px] after:absolute after:top-[110%] after:left-0 after:right-0 after:bg-primary after:transition-all after:duration-300 after:rounded-md after:mx-auto",
+                          "text-zinc-800 dark:text-zinc-200 relative after:content-[''] after:w-0 after:h-[2px] after:absolute after:top-[110%] after:left-0 after:right-0 after:bg-primary after:transition-all after:duration-300 after:rounded-md after:mx-auto",
                           pathname === item.href ? "after:w-full" : "",
                         )}
                         href={item.href}

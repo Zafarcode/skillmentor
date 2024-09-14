@@ -2,14 +2,14 @@ import SimilarTv from "@/components/tv/similar-tv";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { tv } from "@/mock";
-import { TV } from "@/types";
+import { Film } from "@/types";
 
 import { ClockIcon, HeartIcon, ListIcon, MoveLeftIcon, PlayIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
-  const selectedFilm = tv.find((tv) => tv.slug === slug) as TV;
+  const selectedFilm = tv.find((tv) => tv.slug === slug) as Film;
 
   return (
     <main className="pt-28">
@@ -88,7 +88,7 @@ const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
         </div>
 
         <div>
-          <h2 className="font-bold text-2xl mb-16">Oxshash tv</h2>
+          <h2 className="font-bold text-2xl mb-16">O&apos;xshash tv</h2>
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {tv.map((tv) => (
