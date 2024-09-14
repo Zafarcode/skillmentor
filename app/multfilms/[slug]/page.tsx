@@ -17,7 +17,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
 
   return (
     <main
-      className="pt-14"
+      className="pt-14 pb-[84px]"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${selectedFilm?.poster})`,
         backgroundRepeat: "no-repeat",
@@ -95,7 +95,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
             </div>
           </div>
         </div>
-        <div className="pt-[84px]">
+        <div className="">
           <h2 className="font-bold text-2xl mb-[30px]">O&apos;xshash filmlar</h2>
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {multfilm.map((mult) => (
