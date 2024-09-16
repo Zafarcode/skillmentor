@@ -13,7 +13,6 @@ const Hero = () => {
       <Carousel
         opts={{
           loop: true,
-         
         }}
         plugins={[
           Autoplay({
@@ -24,12 +23,9 @@ const Hero = () => {
         <CarouselContent>
           {Array.from({ length: 10 }).map((_, index) => (
             <CarouselItem key={index}>
-              {/* Section with background image */}
               <section className="relative h-screen bg-cover bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
-                {/* Dark overlay */}
                 <div className="absolute inset-0 bg-black opacity-60"></div>
 
-                {/* Content */}
                 <section className="relative pt-80 pl-48 items-center z-10">
                   <div className="container">
                     <div className="mb-16 grid grid-cols-1 md:grid-cols-2 items-center">
@@ -57,10 +53,10 @@ const Hero = () => {
                         <div className="overflow-hidden">
                           <Image
                             src={"/image.png"}
-                            width={300} // Adjusted width
-                            height={450} // Adjusted height
+                            width={300}
+                            height={450}
                             className="w-60 h-auto object-cover rounded-lg"
-                            style={{ aspectRatio: "300/450", objectFit: "cover" }} // Adjusted aspect ratio
+                            style={{ aspectRatio: "300/450", objectFit: "cover" }}
                             alt="Descriptive image alt text"
                           />
                         </div>
@@ -72,7 +68,7 @@ const Hero = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        {/* Navigation arrows */}
+
         <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
           <CarouselPrevious className="text-white" />
         </div>

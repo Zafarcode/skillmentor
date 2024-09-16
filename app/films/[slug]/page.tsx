@@ -20,7 +20,6 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
-         
         }}
       >
         <div className="container">
@@ -80,8 +79,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
                       className="px-4 py-2 bg-transparent text-white font-bold border-white rounded-md flex items-center space-x-2 p-6"
                     >
                       <span>Sevimli</span>
-                        <HeartIcon className="text-white fill-white w-5 h-5" />
-                      
+                      <HeartIcon className="text-white fill-white w-5 h-5" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent className="w-40 absolute right-0 bottom-1">
