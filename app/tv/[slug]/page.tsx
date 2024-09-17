@@ -1,4 +1,4 @@
-import SimilarFilm from "@/components/tv/similar-tv";
+import SimilarTv from "@/components/tv/similar-tv";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { tv } from "@/mock";
@@ -98,7 +98,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {tv.map((tv) => (
-              <SimilarFilm key={tv.id} {...tv} />
+              <SimilarTv key={tv.id} {...tv} />
             ))}
           </section>
         </div>
