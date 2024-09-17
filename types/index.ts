@@ -37,3 +37,13 @@ export type Anime = {
   categories: string[];
   description: string;
 };
+
+export type Tv = {
+  id: number;
+  title: string;
+  slug: string;
+  poster: string;
+  rating: number;
+  categories: string[];
+  description: string;
+};

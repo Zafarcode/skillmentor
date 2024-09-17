@@ -1,15 +1,15 @@
-import SimilarFilm from "@/components/film/similar-film";
+import SimilarFilm from "@/components/tv/similar-tv";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { tv } from "@/mock";
-import { Film } from "@/types";
+import { Tv } from "@/types";
 
 import { ClockIcon, HeartIcon, ListIcon, PlayIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
-  const selectedTV = tv.find((tv) => tv.slug === slug) as Film;
+  const selectedTV = tv.find((tv) => tv.slug === slug) as Tv;
 
   return (
     <main className="pt-28">
@@ -23,7 +23,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
         }}
       >
         <div className="container">
-          <Link className=" flex gap-2 mb-10 text-white" href="/films">
+          <Link className=" flex gap-2 mb-10 text-white" href="/tv">
             <span className="text-3xl">&#8636;</span>
             <p className="text-2xl font-bold">Ortga</p>
           </Link>
