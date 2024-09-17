@@ -8,7 +8,7 @@ import { ClockIcon, HeartIcon, ListIcon, PlayIcon, StarIcon } from "lucide-react
 import Image from "next/image";
 import Link from "next/link";
 
-const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
+const TvDetail = ({ params: { slug } }: { params: { slug: string } }) => {
   const selectedTV = tv.find((tv) => tv.slug === slug) as Tv;
 
   return (
@@ -94,7 +94,7 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
 
       <div className="container">
         <div>
-          <h2 className="font-bold text-3xl mb-16">O&apos;xshash filmlar</h2>
+          <h2 className="font-bold text-3xl mb-16">O&apos;xshash Tv</h2>
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {tv.map((tv) => (
@@ -107,4 +107,4 @@ const FilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
   );
 };
 
-export default FilmsDetail;
+export default TvDetail;
