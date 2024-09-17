@@ -26,3 +26,14 @@ export type Multfilm = {
   categories: string[];
   description: string;
 };
+
+
+export type Anime = {
+  id: number;
+  title: string;
+  slug: string;
+  poster: string;
+  rating: number;
+  categories: string[];
+  description: string;
+};

@@ -1,30 +1,29 @@
+import SimilarAnime from "@/components/anime/similar-anime";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { multfilms } from "@/mock";
-import { Multfilm } from "@/types";
+import { anime } from "@/mock";
+import { Anime } from "@/types";
 
 import { ClockIcon, HeartIcon, ListIcon, PlayIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import SimilarMultfilm from "@/components/multfilm/similar-multfilm";
-
-const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => {
-  const selectedMultfilm = multfilms.find((mult) => mult.slug === slug) as Multfilm;
+const AnimesDetail = ({ params: { slug } }: { params: { slug: string } }) => {
+  const selectedAnime = anime.find((anim) => anim.slug === slug) as Anime;
 
   return (
     <main className="pt-28">
       <section
         className="pt-14 mt-[-115px] mb-20 pb-[84px] w-full"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${selectedMultfilm?.poster})`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${selectedAnime?.poster})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
         <div className="container">
-          <Link className=" flex gap-2 mb-10 text-white" href="/multfilms">
+          <Link className=" flex gap-2 mb-10 text-white" href="/anime">
             <span className="text-3xl">&#8636;</span>
             <p className="text-2xl font-bold">Ortga</p>
           </Link>
@@ -32,8 +31,8 @@ const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => 
           <div className="mb-16 grid grid-cols-1 md:grid-cols-2 items-center relative z-10">
             <div className="relative rounded-lg overflow-hidden">
               <Image
-                src={selectedMultfilm?.poster || "/default-poster.png"}
-                alt={selectedMultfilm.title}
+                src={selectedAnime?.poster || "/default-poster.png"}
+                alt={selectedAnime.title}
                 width={400}
                 height={600}
                 className="w-72 h-auto object-cover"
@@ -44,14 +43,14 @@ const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => 
               </Button>
             </div>
             <div className=" space-y-4 xl:ml-[-340px] lg:ml-[-150px] sm:ml-0 md:ml-0 mb-10">
-              <h1 className="text-3xl font-bold text-white">{selectedMultfilm.title}</h1>
+              <h1 className="text-3xl font-bold text-white">{selectedAnime.title}</h1>
               <div className="flex items-center gap-2">
                 <StarIcon className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                <span className="text-white">{selectedMultfilm.rating}</span>
+                <span className="text-white">{selectedAnime.rating}</span>
               </div>
               <div className="flex items-center gap-2 text-white">
                 <ListIcon className="w-5 h-5" />
-                <span>{selectedMultfilm.categories.join(",")}</span>
+                <span>{selectedAnime.categories.join(",")}</span>
               </div>
               <div className="flex items-center gap-2 text-white">
                 <ClockIcon className="w-5 h-5" />
@@ -61,7 +60,7 @@ const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => 
                 <span className="font-bold text-white">Batafsil</span>
               </div>
               <div className="prose text-white">
-                <p>{selectedMultfilm.description}</p>
+                <p>{selectedAnime.description}</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex items-center justify-center">
@@ -98,8 +97,8 @@ const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => 
           <h2 className="font-bold text-3xl mb-16">O&apos;xshash filmlar</h2>
 
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-            {multfilms.map((mult) => (
-              <SimilarMultfilm key={mult.id} {...mult} />
+            {anime.map((anim) => (
+              <SimilarAnime key={anim.id} {...anim} />
             ))}
           </section>
         </div>
@@ -108,4 +107,4 @@ const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => 
   );
 };
 
-export default MultfilmsDetail;
+export default AnimesDetail;
