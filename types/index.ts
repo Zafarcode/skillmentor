@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
 
 export type ChildrenProps = {
-	children: React.ReactNode
-}
-
+  children: React.ReactNode;
+};
 
 export type Film = {
   id: number;
@@ -15,8 +14,6 @@ export type Film = {
   description: string;
 };
 
-
-
 export type Multfilm = {
   id: number;
   title: string;
@@ -26,7 +23,6 @@ export type Multfilm = {
   categories: string[];
   description: string;
 };
-
 
 export type Anime = {
   id: number;
@@ -39,6 +35,16 @@ export type Anime = {
 };
 
 export type Tv = {
+  id: number;
+  title: string;
+  slug: string;
+  poster: string;
+  rating: number;
+  categories: string[];
+  description: string;
+};
+
+export type Music = {
   id: number;
   title: string;
   slug: string;
