@@ -36,6 +36,97 @@ export const navList: { id: number; label: string; href: string }[] = [
   },
 ];
 
+
+export const serials: {
+  id: number;
+  title: string;
+  slug: string;
+  poster: string;
+  rating: number;
+  year: number;
+  categories: string[];
+  description: string;
+}[] = [
+  {
+    id: 1,
+    title: "Breaking Bad",
+    slug: "breaking-bad",
+    poster: "/amir.png",
+    rating: 9.5,
+    year: 2008,
+    categories: ["Crime", "Drama", "Thriller"],
+    description:
+      "A high school chemistry teacher turned methamphetamine producer navigates the dangers of the drug trade while trying to secure his family's future.",
+  },
+  {
+    id: 2,
+    title: "Game of Thrones",
+    slug: "game-of-thrones",
+    poster: "/amir.png",
+    rating: 9.3,
+    year: 2011,
+    categories: ["Action", "Adventure", "Drama"],
+    description:
+      "Nine noble families wage war against each other to gain control over the mythical land of Westeros.",
+  },
+  {
+    id: 3,
+    title: "Stranger Things",
+    slug: "stranger-things",
+    poster: "/amir.png",
+    rating: 8.7,
+    year: 2016,
+    categories: ["Drama", "Fantasy", "Horror"],
+    description:
+      "A group of young friends in a small town encounter terrifying supernatural forces and secret government experiments.",
+  },
+  {
+    id: 4,
+    title: "The Mandalorian",
+    slug: "the-mandalorian",
+    poster: "/amir.png",
+    rating: 8.8,
+    year: 2019,
+    categories: ["Action", "Adventure", "Sci-Fi"],
+    description:
+      "The travels of a lone bounty hunter in the outer reaches of the galaxy, far from the authority of the New Republic.",
+  },
+  {
+    id: 5,
+    title: "Sherlock",
+    slug: "sherlock",
+    poster: "/amir.png",
+    rating: 9.1,
+    year: 2010,
+    categories: ["Crime", "Drama", "Mystery"],
+    description:
+      "A modern update finds the famous sleuth and his doctor partner solving crime in 21st-century London.",
+  },
+  {
+    id: 6,
+    title: "Friends",
+    slug: "friends",
+    poster: "/amir.png",
+    rating: 8.9,
+    year: 1994,
+    categories: ["Comedy", "Romance"],
+    description:
+      "Follows the personal and professional lives of six twenty to thirty-something friends living in Manhattan.",
+  },
+  {
+    id: 7,
+    title: "The Office",
+    slug: "the-office",
+    poster: "/amir.png",
+    rating: 8.9,
+    year: 2005,
+    categories: ["Comedy"],
+    description:
+      "A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium.",
+  },
+];
+
+
 export const films: {
   id: number;
   title: string;
