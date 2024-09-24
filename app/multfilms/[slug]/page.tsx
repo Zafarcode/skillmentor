@@ -1,3 +1,6 @@
+"use client"; // Qo'shimcha
+
+import { useEffect, useState } from "react"; // useEffect va useState import
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { multfilms } from "@/mock";
@@ -24,7 +27,7 @@ const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => 
         }}
       >
         <div className="container">
-          <Link className=" flex gap-2 mb-10 text-white" href="/multfilms">
+          <Link className="flex gap-2 mb-10 text-white" href="/multfilms">
             <span className="text-3xl">&#8636;</span>
             <p className="text-2xl font-bold">Ortga</p>
           </Link>
@@ -43,7 +46,7 @@ const MultfilmsDetail = ({ params: { slug } }: { params: { slug: string } }) => 
                 <PlayIcon className="w-6 h-6" />
               </Button>
             </div>
-            <div className=" space-y-4 xl:ml-[-340px] lg:ml-[-150px] sm:ml-0 md:ml-0 mb-10">
+            <div className="space-y-4 xl:ml-[-340px] lg:ml-[-150px] sm:ml-0 md:ml-0 mb-10">
               <h1 className="text-3xl font-bold text-white">{selectedMultfilm.title}</h1>
               <div className="flex items-center gap-2">
                 <StarIcon className="w-5 h-5 fill-yellow-400 text-yellow-400" />
