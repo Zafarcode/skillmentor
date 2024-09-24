@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { HeartIcon, StarIcon } from "lucide-react";
@@ -17,6 +20,32 @@ export default function Similarmusic({
   rating: number;
   year: number;
 }) {
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  // LocalStorage dan favoritlarni yuklash
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const isMusicFavorite = favorites.includes(slug);
+    setIsFavorite(isMusicFavorite);
+  }, [slug]);
+
+  // Favorit holatini o'zgartirish
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+    if (isFavorite) {
+      // Agar favorit bo'lsa, ro'yxatdan o'chirish
+      const updatedFavorites = favorites.filter((s: string) => s !== slug);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    } else {
+      // Agar favorit bo'lmasa, ro'yxatga qo'shish
+      favorites.push(slug);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    }
+
+    setIsFavorite(!isFavorite);
+  };
+
   return (
     <Card className="w-full h-full max-w-sm overflow-hidden shadow-none border-none rounded-t-lg rounded-b-none bg-transparent">
       <CardContent className="p-0">
@@ -29,7 +58,7 @@ export default function Similarmusic({
             className="w-full h-[300px] object-cover rounded-lg"
             style={{ aspectRatio: "500/800", objectFit: "cover" }}
           />
-          <div className=" pt-4 space-y-3">
+          <div className="pt-4 space-y-3">
             <div className="flex items-center gap-1">
               <StarIcon className="w-5 h-5 fill-primary" />
               <span className="font-medium">{rating}</span>
@@ -40,11 +69,25 @@ export default function Similarmusic({
 
               <Tooltip>
                 <TooltipTrigger>
-                  <HeartIcon className="w-5 h-5" />
-                  <TooltipContent className="w-32 absolute right-0 bottom-1">
-                    <p>Add to favorites</p>
-                  </TooltipContent>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault(); // Linkning default xatti-harakatini to'xtatish
+                      toggleFavorite();
+                    }}
+                    className="relative"
+                    aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"} // Ekran o'quvchilar uchun matn
+                    title={isFavorite ? "Remove from favorites" : "Add to favorites"} // Tooltip uchun matn
+                  >
+                    <HeartIcon
+                      className={`w-5 h-5 transition-colors duration-300 ${
+                        isFavorite ? "fill-red-500" : "fill-gray-400"
+                      }`}
+                    />
+                  </button>
                 </TooltipTrigger>
+                <TooltipContent className="w-32 absolute right-0 bottom-1">
+                  <p>{isFavorite ? "Remove from favorites" : "Add to favorites"}</p>
+                </TooltipContent>
               </Tooltip>
             </div>
           </div>
