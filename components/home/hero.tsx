@@ -6,7 +6,7 @@ import { PlayIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 
 const Hero = () => {
-  const imageUrl = "https://files.itv.uz/uploads/helper/2024/06/06//c01744ef18aa3251c621e956c0544cd6-q-1920x750.jpeg";
+  const imageUrl = "/image.png";
 
   return (
     <Carousel
