@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Button } from "../ui/button";
 import { ModeToggle } from "./mode-toggle";
 
 const SiteHeader = () => {
@@ -36,7 +37,7 @@ const SiteHeader = () => {
         <div className="flex justify-between items-center">
           {/* Chap yuqori burchakdagi profil tugmasi */}
           <div className="absolute top-6 left-6 z-50">
-            {/* <Button
+            <Button
               variant="secondary"
               className="bg-white text-black hover:bg-gray-200 w-[100px] h-[40px] flex items-center justify-center"
               onClick={toggleProfile}
@@ -44,7 +45,7 @@ const SiteHeader = () => {
               <Link href={"/profile"}>
                 <div className=" border-black w-full text-center">Profile</div>
               </Link>
-            </Button> */}
+            </Button>
 
             {/* /Profil paneli */}
           </div>

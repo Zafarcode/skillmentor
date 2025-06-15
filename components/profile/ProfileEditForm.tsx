@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { UserProfile } from "@/types";
 import React, { useEffect, useMemo, useState } from "react";
 
+import { addOrUpdateProfile } from "@/app/admin/lib/profileStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Province {
@@ -149,7 +150,8 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialProfile, onSav
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(profile);
+    addOrUpdateProfile(profile); // <-- local massivga yozamiz
+    onSave(profile); // Bu parent componentga xabar berish
   };
 
   const availableDistricts = useMemo(() => {

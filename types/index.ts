@@ -21,25 +21,22 @@ export interface TestQuestion {
 }
 
 export interface UserProfile {
-  id: string;
+  userId: string;
   email: string;
   fullName: string;
-  age?: number;
-  experienceYears?: number;
+  age: number;
+  experienceYears: number;
   education: string;
-  phone?: string;
-  telegram?: string;
-  linkedin?: string;
-  aboutMe?: string;
-  skills: string[];
-  desiredPosition?: string;
-  expectedSalary?: string;
-  preferredProvince?: string;
-  preferredDistrict?: string;
-  readyToRelocate?: boolean;
-  // Yangi qo'shilgan maydonlar
-  profilePictureUrl?: string; // Profil rasmining URL'si
-  resumeUrl?: string; // Rezyume (CV) faylining URL'si
+  phone: string;
+  telegram: string;
+  linkedin: string;
+  aboutMe: string;
+  skills: string;
+  desiredPosition: string;
+  expectedSalary: string;
+  preferredProvince: string;
+  preferredDistrict: string;
+  readyToRelocate: boolean;
 }
 
 // Admin foydalanuvchisi uchun tip
