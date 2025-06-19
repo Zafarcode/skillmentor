@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Linkedin, Mail, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -54,7 +53,6 @@ const ProfileDisplay = () => {
     <Card className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 text-black dark:text-white shadow-lg rounded-lg">
       <CardHeader className="flex items-center justify-between pb-2">
         <CardTitle className="text-3xl font-bold">Mening Profilim</CardTitle>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">Tahrirlash</Button>
       </CardHeader>
       {profile.map((userProfile) => (
         <CardContent className="space-y-6 pt-4">

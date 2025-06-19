@@ -8,75 +8,304 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAdminAuth } from "@/context/AdminAuthContext";
 import { getVacancies, saveVacancies } from "@/lib/storage";
 import { TestQuestion, Vacancy } from "@/types";
-import { Plus, Trash2, X } from "lucide-react"; // Ikonkalar
+import { Briefcase, DollarSign, MapPin, Plus, Rocket, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
-// import { v4 as uuidv4 } from "uuid"; // <-- Bu qatorni o'chiramiz
 
-// ID yaratish uchun oddiy helper funksiya
 const generateUniqueId = (): string => {
   return Date.now().toString() + Math.random().toString(36).substring(2, 9);
 };
 
 const provinces = [
+  // Qoraqalpogʻiston AR
   {
     id: 1,
-    name: "Toshkent shahri",
+    name: "Qoraqalpogʻiston AR",
     districts: [
-      { id: 1, name: "Chilonzor tumani" },
-      { id: 2, name: "Mirzo Ulug'bek tumani" },
-      { id: 3, name: "Yunusobod tumani" },
+      { id: 1, name: "Nukus shahri" },
+      { id: 2, name: "Amudaryo tumani" },
+      { id: 3, name: "Beruniy tumani" },
+      { id: 4, name: "Boʻzatov tumani" },
+      { id: 5, name: "Qanlikoʻl tumani" },
+      { id: 6, name: "Qoraoʻzak tumani" },
+      { id: 7, name: "Qoʻngʻirot tumani" },
+      { id: 8, name: "Kegeyli tumani" },
+      { id: 9, name: "Moʻynoq tumani" },
+      { id: 10, name: "Nukus tumani" },
+      { id: 11, name: "Taxiatosh tumani" },
+      { id: 12, name: "Taxtakoʻpir tumani" },
+      { id: 13, name: "Toʻrtkoʻl tumani" },
+      { id: 14, name: "Xoʻjayli tumani" },
+      { id: 15, name: "Chimboy tumani" },
+      { id: 16, name: "Shoʻmanoy tumani" },
+      { id: 17, name: "Ellikqalʻa tumani" },
     ],
   },
+  // Toshkent shahri
   {
     id: 2,
-    name: "Toshkent viloyati",
+    name: "Toshkent shahri",
     districts: [
-      { id: 4, name: "Zangiota tumani" },
-      { id: 5, name: "Qibray tumani" },
-      { id: 6, name: "Parkent tumani" },
+      { id: 1, name: "Bektemir" },
+      { id: 2, name: "Chilonzor" },
+      { id: 3, name: "Yakkasaroy" },
+      { id: 4, name: "Shayxontohur" },
+      { id: 5, name: "Yunusobod" },
+      { id: 6, name: "Uchtepa" },
+      { id: 7, name: "Olmazor" },
+      { id: 8, name: "Mirobod" },
+      { id: 9, name: "Mirzo Ulugʻbek" },
+      { id: 10, name: "Sergeli" },
+      { id: 11, name: "Yashnobod" },
+      { id: 12, name: "Yangihayot" },
     ],
   },
+  // Toshkent viloyati
   {
     id: 3,
-    name: "Samarqand viloyati",
+    name: "Toshkent viloyati",
     districts: [
-      { id: 7, name: "Samarqand shahri" },
-      { id: 8, name: "Tayloq tumani" },
-      { id: 9, name: "Pastdarg'om tumani" },
+      { id: 1, name: "Bekobod tumani" },
+      { id: 2, name: "Boʻka tumani" },
+      { id: 3, name: "Boʻstonliq tumani" },
+      { id: 4, name: "Chinoz tumani" },
+      { id: 5, name: "Ohangaron tumani" },
+      { id: 6, name: "Oqqoʻrgʻon tumani" },
+      { id: 7, name: "Parkent tumani" },
+      { id: 8, name: "Piskent tumani" },
+      { id: 9, name: "Quyichirchiq tumani" },
+      { id: 10, name: "Yangiyoʻl tumani" },
+      { id: 11, name: "Zangiota tumani" },
+      { id: 12, name: "Oʻrtachirchiq tumani" },
+      { id: 13, name: "Yuqorichirchiq tumani" },
+      { id: 14, name: "Toshkent tumani" },
+      { id: 15, name: "Olmaliq shahri" },
+      { id: 16, name: "Angren shahri" },
     ],
   },
+  // Andijon viloyati
   {
     id: 4,
     name: "Andijon viloyati",
     districts: [
-      { id: 10, name: "Andijon shahri" },
-      { id: 11, name: "Asaka tumani" },
-      { id: 12, name: "Xonobod shahri" },
+      { id: 1, name: "Andijon shahri" },
+      { id: 2, name: "Xonobod shahri" },
+      { id: 3, name: "Andijon tumani" },
+      { id: 4, name: "Asaka tumani" },
+      { id: 5, name: "Baliqchi tumani" },
+      { id: 6, name: "Boʻz tumani" },
+      { id: 7, name: "Buloqboshi tumani" },
+      { id: 8, name: "Izboskan tumani" },
+      { id: 9, name: "Jalaquduq tumani" },
+      { id: 10, name: "Xoʻjaobod tumani" },
+      { id: 11, name: "Qoʻrgʻontepa tumani" },
+      { id: 12, name: "Marhamat tumani" },
+      { id: 13, name: "Oltinkoʻl tumani" },
+      { id: 14, name: "Paxtaobod tumani" },
+      { id: 15, name: "Shahrixon tumani" },
+      { id: 16, name: "Ulugʻnor tumani" },
     ],
   },
+  // Buxoro viloyati
   {
     id: 5,
-    name: "Farg'ona viloyati",
+    name: "Buxoro viloyati",
     districts: [
-      { id: 13, name: "Farg'ona shahri" },
-      { id: 14, name: "Marg'ilon shahri" },
-      { id: 15, name: "Quva tumani" },
+      { id: 1, name: "Buxoro shahri" },
+      { id: 2, name: "Kogon shahri" },
+      { id: 3, name: "Buxoro tumani" },
+      { id: 4, name: "G‘ijduvon tumani" },
+      { id: 5, name: "Jondor tumani" },
+      { id: 6, name: "Kogon tumani" },
+      { id: 7, name: "Olot tumani" },
+      { id: 8, name: "Peshku tumani" },
+      { id: 9, name: "Romitan tumani" },
+      { id: 10, name: "Shofirkon tumani" },
+      { id: 11, name: "Vobkent tumani" },
+      { id: 12, name: "Qorovulbozor tumani" },
+      { id: 13, name: "Qorako‘l tumani" },
     ],
   },
+  // Jizzax viloyati
   {
     id: 6,
+    name: "Jizzax viloyati",
+    districts: [
+      { id: 1, name: "Jizzax shahri" },
+      { id: 2, name: "Arnasoy tumani" },
+      { id: 3, name: "Baxmal tumani" },
+      { id: 4, name: "Doʻstlik tumani" },
+      { id: 5, name: "G‘allaorol tumani" },
+      { id: 6, name: "Mirzachoʻl tumani" },
+      { id: 7, name: "Paxtakor tumani" },
+      { id: 8, name: "Forish tumani" },
+      { id: 9, name: "Sharof Rashidov tumani" },
+      { id: 10, name: "Yangiobod tumani" },
+      { id: 11, name: "Zarbdor tumani" },
+      { id: 12, name: "Zomin tumani" },
+    ],
+  },
+  // Qashqadaryo viloyati
+  {
+    id: 7,
+    name: "Qashqadaryo viloyati",
+    districts: [
+      { id: 1, name: "Qarshi shahri" },
+      { id: 2, name: "Shahrisabz shahri" },
+      { id: 3, name: "Dehqonobod tumani" },
+      { id: 4, name: "Kasbi tumani" },
+      { id: 5, name: "Kitob tumani" },
+      { id: 6, name: "Koson tumani" },
+      { id: 7, name: "Koʻkdala tumani" },
+      { id: 8, name: "Mirishkor tumani" },
+      { id: 9, name: "Muborak tumani" },
+      { id: 10, name: "Nishon tumani" },
+      { id: 11, name: "Qamashi tumani" },
+      { id: 12, name: "Yakkabogʻ tumani" },
+      { id: 13, name: "G‘uzor tumani" },
+      { id: 14, name: "Chiroqchi tumani" },
+    ],
+  },
+  // Samarqand viloyati
+  {
+    id: 8,
+    name: "Samarqand viloyati",
+    districts: [
+      { id: 1, name: "Samarqand shahri" },
+      { id: 2, name: "Kattaqoʻrgʻon shahri" },
+      { id: 3, name: "Bulung‘ur tumani" },
+      { id: 4, name: "Jomboy tumani" },
+      { id: 5, name: "Ishtixon tumani" },
+      { id: 6, name: "Kattaqoʻrgʻon tumani" },
+      { id: 7, name: "Mirzaobod tumani" },
+      { id: 8, name: "Narpay tumani" },
+      { id: 9, name: "Oqdaryo tumani" },
+      { id: 10, name: "Paxtachi tumani" },
+      { id: 11, name: "Pastdarg‘om tumani" },
+      { id: 12, name: "Payariq tumani" },
+      { id: 13, name: "Qoʻshrabot tumani" },
+      { id: 14, name: "Tayloq tumani" },
+      { id: 15, name: "Urgut tumani" },
+    ],
+  },
+  // Surxondaryo viloyati
+  {
+    id: 9,
+    name: "Surxondaryo viloyati",
+    districts: [
+      { id: 1, name: "Termiz shahri" },
+      { id: 2, name: "Boysun tumani" },
+      { id: 3, name: "Denov tumani" },
+      { id: 4, name: "Muzrabot tumani" },
+      { id: 5, name: "Oltinsoy tumani" },
+      { id: 6, name: "Sariosiyo tumani" },
+      { id: 7, name: "Sherobod tumani" },
+      { id: 8, name: "Shoʻrchi tumani" },
+      { id: 9, name: "Termiz tumani" },
+      { id: 10, name: "Uzun tumani" },
+      { id: 11, name: "Bandixon tumani" },
+      { id: 12, name: "Denov shahri" },
+      { id: 13, name: "Qiziriq tumani" },
+      { id: 14, name: "Boysun shahri" },
+    ],
+  },
+  // Sirdaryo viloyati
+  {
+    id: 10,
+    name: "Sirdaryo viloyati",
+    districts: [
+      { id: 1, name: "Guliston shahri" },
+      { id: 2, name: "Guliston tumani" },
+      { id: 3, name: "Mirzaobod tumani" },
+      { id: 4, name: "Oqoltin tumani" },
+      { id: 5, name: "Sayxunobod tumani" },
+      { id: 6, name: "Sirdaryo tumani" },
+      { id: 7, name: "Sardoba tumani" },
+      { id: 8, name: "Xavast tumani" },
+    ],
+  },
+  // Namangan viloyati
+  {
+    id: 11,
     name: "Namangan viloyati",
     districts: [
-      { id: 16, name: "Namangan shahri" },
-      { id: 17, name: "Chust tumani" },
-      { id: 18, name: "Pop tumani" },
+      { id: 1, name: "Namangan shahri" },
+      { id: 2, name: "Chortoq tumani" },
+      { id: 3, name: "Chust tumani" },
+      { id: 4, name: "Kosonsoy tumani" },
+      { id: 5, name: "Mingbuloq tumani" },
+      { id: 6, name: "Namangan tumani" },
+      { id: 7, name: "Norin tumani" },
+      { id: 8, name: "Pop tumani" },
+      { id: 9, name: "Toʻraqoʻrgʻon tumani" },
+      { id: 10, name: "Uchqoʻrgʻon tumani" },
+      { id: 11, name: "Uychi tumani" },
+      { id: 12, name: "Yangiqoʻrgʻon tumani" },
+    ],
+  },
+  // Fargʻona viloyati
+  {
+    id: 12,
+    name: "Fargʻona viloyati",
+    districts: [
+      { id: 1, name: "Fargʻona shahri" },
+      { id: 2, name: "Qoʻqon shahri" },
+      { id: 3, name: "Margʻilon shahri" },
+      { id: 4, name: "Beshariq tumani" },
+      { id: 5, name: "Bogʻdod tumani" },
+      { id: 6, name: "Dangʻara tumani" },
+      { id: 7, name: "Furqat tumani" },
+      { id: 8, name: "Oltiariq tumani" },
+      { id: 9, name: "Qoʻshtepa tumani" },
+      { id: 10, name: "Quva tumani" },
+      { id: 11, name: "Rishton tumani" },
+      { id: 12, name: "Soʻx tumani" },
+      { id: 13, name: "Toshloq tumani" },
+      { id: 14, name: "Uchkoʻprik tumani" },
+      { id: 15, name: "Yozyovon tumani" },
+    ],
+  },
+  // Xorazm viloyati
+  {
+    id: 13,
+    name: "Xorazm viloyati",
+    districts: [
+      { id: 1, name: "Urganch shahri" },
+      { id: 2, name: "Xiva shahri" },
+      { id: 3, name: "Bog‘ot tumani" },
+      { id: 4, name: "Gurlan tumani" },
+      { id: 5, name: "Hazorasp tumani" },
+      { id: 6, name: "Qo‘shko‘pir tumani" },
+      { id: 7, name: "Shovot tumani" },
+      { id: 8, name: "Xazorasp tumani" },
+      { id: 9, name: "Yangiariq tumani" },
+      { id: 10, name: "Yangibozor tumani" },
+      { id: 11, name: "Yangiqo‘rg‘on tumani" },
+    ],
+  },
+  // Navoiy viloyati
+  {
+    id: 14,
+    name: "Navoiy viloyati",
+    districts: [
+      { id: 1, name: "Navoiy shahri" },
+      { id: 2, name: "Zarafshon shahri" },
+      { id: 3, name: "G‘ozg‘on shahri" },
+      { id: 4, name: "Konimex tumani" },
+      { id: 5, name: "Qiziltepa tumani" },
+      { id: 6, name: "Navbahor tumani" },
+      { id: 7, name: "Karmana tumani" },
+      { id: 8, name: "Nurota tumani" },
+      { id: 9, name: "Tomdi tumani" },
+      { id: 10, name: "Uchquduq tumani" },
+      { id: 11, name: "Xatirchi tumani" },
     ],
   },
 ];
 
 const AdminVacancyPage: React.FC = () => {
   const { isAdminLoggedIn, isLoadingAdmin, adminLogout } = useAdminAuth();
+  const router = useRouter(); // router'ni import qiling
 
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [newVacancy, setNewVacancy] = useState<Vacancy>({
@@ -97,12 +326,22 @@ const AdminVacancyPage: React.FC = () => {
   const [newBenefit, setNewBenefit] = useState("");
   const [newTestQuestion, setNewTestQuestion] = useState<TestQuestion>({
     question: "",
-    options: ["", "", "", ""], // 4 ta bo'sh variant
+    options: ["", "", "", ""],
     correctAnswer: 0,
   });
   const [editingVacancyId, setEditingVacancyId] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
+
+  // Uncomment this useEffect to load vacancies on component mount
+  useEffect(() => {
+    if (!isLoadingAdmin && !isAdminLoggedIn) {
+      router.push("/admin/login");
+    } else if (isAdminLoggedIn) {
+      const storedVacancies = getVacancies();
+      setVacancies(storedVacancies);
+    }
+  }, [isAdminLoggedIn, isLoadingAdmin, router]);
 
   const handleVacancyChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -110,7 +349,7 @@ const AdminVacancyPage: React.FC = () => {
 
     if (name === "province") {
       setSelectedProvince(value);
-      setSelectedDistrict(""); // Viloyat o'zgarsa, tumanni tozalash
+      setSelectedDistrict("");
       setNewVacancy((prev) => ({ ...prev, district: "" }));
     } else if (name === "district") {
       setSelectedDistrict(value);
@@ -210,7 +449,7 @@ const AdminVacancyPage: React.FC = () => {
       );
       setEditingVacancyId(null);
     } else {
-      updatedVacancies = [...vacancies, { ...newVacancy, id: generateUniqueId() }]; // <-- ID yaratish uchun yangi funksiya
+      updatedVacancies = [...vacancies, { ...newVacancy, id: generateUniqueId() }];
     }
 
     saveVacancies(updatedVacancies);
@@ -246,14 +485,14 @@ const AdminVacancyPage: React.FC = () => {
     setEditingVacancyId(vacancy.id);
     setSelectedProvince(vacancy.province);
     setSelectedDistrict(vacancy.district);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Yuqoriga o'tish
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDeleteVacancy = (id: string) => {
     if (confirm("Haqiqatan ham ushbu vakansiyani o'chirmoqchimisiz?")) {
       const updatedVacancies = vacancies.filter((v) => v.id !== id);
       saveVacancies(updatedVacancies);
-      setVacancies(updatedVacancies);
+      setVacancies(updatedVacancies); // Update state after deletion
     }
   };
 
@@ -261,8 +500,6 @@ const AdminVacancyPage: React.FC = () => {
     const province = provinces.find((p) => p.name === selectedProvince);
     return province ? province.districts : [];
   }, [selectedProvince]);
-
-  
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 flex flex-col items-center px-4">
@@ -439,7 +676,7 @@ const AdminVacancyPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Test Savollari (agar kerak bo'lmasa, bu qismni o'chirishingiz mumkin) */}
+            {/* Test Savollari */}
             <div>
               <h3 className="text-xl font-semibold mb-3">Test Savollari</h3>
               <div className="space-y-4 border p-4 rounded-md bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
@@ -568,7 +805,7 @@ const AdminVacancyPage: React.FC = () => {
               </Button>
             )}
           </form>
-
+          ---
           <h2 className="text-2xl font-semibold mt-10 mb-4 border-b pb-2 dark:border-gray-700">Mavjud Vakansiyalar</h2>
           {vacancies.length === 0 ? (
             <p className="text-center text-gray-600 dark:text-gray-300">Hozircha vakansiyalar mavjud emas.</p>
@@ -577,25 +814,77 @@ const AdminVacancyPage: React.FC = () => {
               {vacancies.map((vacancy) => (
                 <Card
                   key={vacancy.id}
-                  className="bg-white dark:bg-gray-700 shadow-md rounded-lg p-4 flex flex-col justify-between"
+                  className="relative bg-white dark:bg-gray-700 shadow-xl rounded-lg p-6 flex flex-col justify-between overflow-hidden group transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:h-2 transition-all duration-300"></div>{" "}
+                  {/* Top accent */}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:h-2 transition-all duration-300"></div>{" "}
+                  {/* Bottom accent */}
                   <div>
-                    <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400">{vacancy.direction}</h3>
-                    <p className="text-gray-700 dark:text-gray-300 mt-1">Maosh: {vacancy.salary}</p>
-                    <p className="text-gray-700 dark:text-gray-300">Tajriba: {vacancy.experience}</p>
-                    <p className="text-gray-700 dark:text-gray-300">
-                      Hudud: {vacancy.province}, {vacancy.district}
-                    </p>
+                    <h3 className="text-2xl font-extrabold text-blue-700 dark:text-blue-400 mb-2">
+                      <Rocket className="inline-block mr-2 w-6 h-6 text-indigo-500" />
+                      {vacancy.direction}
+                    </h3>
+                    <div className="space-y-1 text-gray-700 dark:text-gray-300">
+                      <p className="flex items-center">
+                        <DollarSign className="w-4 h-4 mr-2 text-green-500" />
+                        <span className="font-medium">Maosh:</span> {vacancy.salary}
+                      </p>
+                      <p className="flex items-center">
+                        <Briefcase className="w-4 h-4 mr-2 text-yellow-500" />
+                        <span className="font-medium">Tajriba:</span> {vacancy.experience || "Ko'rsatilmagan"}
+                      </p>
+                      <p className="flex items-center">
+                        <MapPin className="w-4 h-4 mr-2 text-red-500" />
+                        <span className="font-medium">Hudud:</span> {vacancy.province}, {vacancy.district}
+                      </p>
+                      {vacancy.schedule && (
+                        <p className="flex items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 mr-2 text-cyan-500"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 9.586V6z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span className="font-medium">Jadval:</span> {vacancy.schedule}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex gap-2 mt-4">
+                  <div className="mt-6 flex gap-3 justify-end">
                     <Button
                       size="sm"
                       onClick={() => handleEditVacancy(vacancy)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white flex items-center transition-transform duration-200 hover:-translate-y-0.5"
                     >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                        <path
+                          fillRule="evenodd"
+                          d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
                       Tahrirlash
                     </Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDeleteVacancy(vacancy.id)}>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleDeleteVacancy(vacancy.id)}
+                      className="flex items-center transition-transform duration-200 hover:-translate-y-0.5"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
                       O'chirish
                     </Button>
                   </div>

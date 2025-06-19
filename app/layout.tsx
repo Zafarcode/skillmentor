@@ -37,8 +37,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const NAVBAR_HEIGHT = 80;
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
@@ -46,7 +44,7 @@ export default function RootLayout({
           <AuthProvider>
             <AdminAuthProvider>
               <SiteHeader />
-              <div style={{ paddingTop: `${NAVBAR_HEIGHT}px` }}>{children}</div>
+              <div>{children}</div>
             </AdminAuthProvider>
           </AuthProvider>
         </RootProvider>

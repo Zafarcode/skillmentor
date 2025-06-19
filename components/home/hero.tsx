@@ -1,18 +1,15 @@
-// app/page.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/context/AuthContext"; // AuthContext'ni import qiling
+import { useAuth } from "@/context/AuthContext";
 import { getVacancies, saveVacancies } from "@/lib/storage";
 import { Vacancy } from "@/types";
-import axios from "axios"; // API so'rovlari uchun axios
-import { Heart, X } from "lucide-react"; // Send ikonkasini qo'shdik
-import React, { useEffect, useMemo, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog"; // DialogContent, DialogDescription, DialogHeader, DialogTitle komponentlarini qo'shdik
+import { Heart, X, MapPin, Briefcase, DollarSign, BookOpen, Clock } from "lucide-react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 
-// ID yaratish uchun oddiy helper funksiya
 const generateUniqueId = (): string => {
   return Date.now().toString() + Math.random().toString(36).substring(2, 9);
 };
@@ -81,9 +78,8 @@ const provinces: Province[] = [
 ];
 
 const VACANCY_STATIC_DATA: Vacancy[] = [
-  // Sizning bergan Matematika va Fizika o'qituvchisi namunalari
   {
-    id: "1", // Statik ID
+    id: "1",
     direction: "Matematika O'qituvchisi",
     salary: "4-7 million so'm",
     requirements: [
@@ -170,6 +166,25 @@ const VACANCY_STATIC_DATA: Vacancy[] = [
   },
 ];
 
+type ProfileData = {
+  userid: number;
+  email: string;
+  fullname: string;
+  age: number;
+  experienceyears: number;
+  education: string;
+  phone: string;
+  telegram: string;
+  linkedin: string;
+  aboutme: string;
+  skills: string;
+  desiredposition: string;
+  expectedsalary: string;
+  preferredprovince: string;
+  preferreddistrict: string;
+  readytorelocate: boolean;
+};
+
 const HomePage: React.FC = () => {
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [loading, setLoading] = useState(true);
@@ -187,6 +202,28 @@ const HomePage: React.FC = () => {
   const [applyError, setApplyError] = useState<string | null>(null); // YANGI: Rezyume yuborish xatosi
 
   const { user, fetchUserProfile, isLoggedIn } = useAuth(); // AuthContext'dan ma'lumotlarni oling
+
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/profile", { cache: "no-store" });
+        if (!res.ok) {
+          console.error("API dan profilni olishda xatolik:", res.statusText);
+          return;
+        }
+        const data: ProfileData = await res.json();
+        setProfile(data);
+      } catch (error) {
+        console.error("Profilni olishda xatolik:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+  console.log(profile);
 
   // Lokal ma'lumotlarni yuklash
   useEffect(() => {
@@ -276,58 +313,6 @@ const HomePage: React.FC = () => {
     setShowApplyMessage(true); // Test natijasini ko'rsatishga ruxsat berish
   };
 
-  // YANGI: Rezyumeni yuborish funksiyasi
-  const handleSendResume = async () => {
-    if (!isLoggedIn) {
-      alert("Rezyume yuborish uchun tizimga kirishingiz kerak!");
-      // router.push('/login'); // Foydalanuvchini login sahifasiga yo'naltirish
-      return;
-    }
-
-    if (!user || !user.id) {
-      setApplyError("Foydalanuvchi ma'lumotlari topilmadi. Qaytadan urinib ko'ring.");
-      return;
-    }
-
-    setIsApplying(true);
-    setApplyError(null);
-
-    try {
-      // Foydalanuvchi profil ma'lumotlarini yuklash
-      const userProfile = await fetchUserProfile(user.id);
-
-      if (!userProfile) {
-        setApplyError(
-          "Profil ma'lumotlarini yuklashda xatolik. Iltimos, profilingizni to'ldirganingizga ishonch hosil qiling.",
-        );
-        setIsApplying(false);
-        return;
-      }
-
-      // Backend API'ga rezyume ma'lumotlarini yuborish
-      // Bu yerda sizning backend API endpointingiz bo'ladi
-      const response = await axios.post("/api/submit-application", {
-        vacancyId: selectedVacancy?.id,
-        userProfile: userProfile,
-        testScore: testPercentage, // Test natijasini ham qo'shish mumkin
-      });
-
-      if (response.status === 200) {
-        alert("Rezyume muvaffaqiyatli yuborildi!");
-        handleCloseDialog(); // Dialogni yopish
-      } else {
-        setApplyError(response.data.message || "Rezyumeni yuborishda noma'lum xatolik yuz berdi.");
-      }
-    } catch (error: any) {
-      console.error("Rezyume yuborishda xatolik:", error);
-      setApplyError(
-        error.response?.data?.message || "Rezyumeni yuborishda xatolik yuz berdi. Iltimos, keyinroq urinib ko'ring.",
-      );
-    } finally {
-      setIsApplying(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -339,6 +324,49 @@ const HomePage: React.FC = () => {
   const NAVBAR_HEIGHT = 80;
   const FILTER_BLOCK_HEIGHT = 180;
 
+  const handleSendResume = async () => {
+    if (!profile) {
+      alert("Profil ma'lumotlari mavjud emas");
+      return;
+    }
+
+    setIsApplying(true);
+    setApplyError("");
+
+    try {
+      const response = await fetch("/api/resumes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: profile.userid,
+          fullName: profile.fullname,
+          email: profile.email,
+          resumeData: {
+            age: profile.age,
+            experienceYears: profile.experienceyears,
+            education: profile.education,
+            phone: profile.phone,
+            telegram: profile.telegram,
+            linkedin: profile.linkedin,
+            aboutMe: profile.aboutme,
+            skills: profile.skills, // agar skills string bo‘lsa
+            desiredPosition: profile.desiredposition,
+            expectedSalary: profile.expectedsalary,
+            preferredProvince: profile.preferredprovince,
+            preferredDistrict: profile.preferreddistrict,
+            readyToRelocate: profile.readytorelocate,
+          },
+        }),
+      });
+
+      alert("Rezyume muvaffaqiyatli yuborildi!");
+    } catch (error: any) {
+      setApplyError(error.message || "Noma'lum xatolik");
+    } finally {
+      setIsApplying(false);
+    }
+  };
+
   return (
     <div className="relative min-h-screen">
       {/* Qotirilgan "Vakansiyalar" sarlavhasi va filtrlash qismi */}
@@ -347,14 +375,15 @@ const HomePage: React.FC = () => {
         style={{ top: `${NAVBAR_HEIGHT}px` }}
       >
         <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-black dark:text-white mb-4">Vakansiyalar</h1>
+          <h1 className="text-2xl sm:text-3xl text-center font-bold text-black dark:text-white mb-4">Vakansiyalar</h1>{" "}
+          {/* Mobil uchun text-2xl */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <Input
               type="text"
               placeholder="Vakansiyalarni qidirish..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-grow bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
+              className="flex-grow bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600 text-sm sm:text-base" // Mobil uchun text-sm
             />
             <select
               value={selectedProvince}
@@ -362,7 +391,7 @@ const HomePage: React.FC = () => {
                 setSelectedProvince(e.target.value);
                 setSelectedDistrict("");
               }}
-              className="p-2 border rounded-md bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600 md:w-auto w-full"
+              className="p-2 border rounded-md bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600 md:w-auto w-full text-sm sm:text-base" // Mobil uchun text-sm
             >
               <option value="">Barcha viloyatlar</option>
               {provinces.map((province) => (
@@ -374,7 +403,7 @@ const HomePage: React.FC = () => {
             <select
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="p-2 border rounded-md bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600 md:w-auto w-full"
+              className="p-2 border rounded-md bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600 md:w-auto w-full text-sm sm:text-base" // Mobil uchun text-sm
               disabled={!selectedProvince}
             >
               <option value="">Barcha tumanlar</option>
@@ -391,7 +420,7 @@ const HomePage: React.FC = () => {
                 setSelectedProvince("");
                 setSelectedDistrict("");
               }}
-              className="md:w-auto w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-black dark:text-white border-gray-300 dark:border-gray-600"
+              className="md:w-auto w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-black dark:text-white border-gray-300 dark:border-gray-600 text-sm sm:text-base" // Mobil uchun text-sm
             >
               <X className="w-4 h-4 mr-2" /> Filtrlarni tozalash
             </Button>
@@ -406,43 +435,19 @@ const HomePage: React.FC = () => {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredVacancies.length === 0 ? (
-            <p className="col-span-full text-center text-gray-600 dark:text-gray-300 text-lg py-10">
+            <p className="col-span-full text-center text-gray-600 dark:text-gray-300 text-base sm:text-lg py-10">
+              {" "}
+              {/* Mobil uchun text-base */}
               Hech qanday vakansiya topilmadi.
             </p>
           ) : (
             filteredVacancies.map((vacancy) => (
-              <Card
+              <CardComponent // Har bir Card uchun yangi komponentdan foydalanildi
                 key={vacancy.id}
-                className="bg-white dark:bg-gray-800 text-black dark:text-white shadow-lg rounded-lg p-6 flex flex-col justify-between hover:scale-[1.02] transition-transform duration-200 ease-in-out border border-gray-200 dark:border-gray-700"
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <CardTitle className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                      {vacancy.direction}
-                    </CardTitle>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleToggleFavorite(vacancy.id)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                    >
-                      <Heart className={vacancy.isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"} />
-                    </Button>
-                  </div>
-                  <CardDescription className="text-gray-600 dark:text-gray-400 text-sm">
-                    {vacancy.province}, {vacancy.district}
-                  </CardDescription>
-                  <p className="mt-2 text-lg font-semibold text-gray-800 dark:text-gray-200">{vacancy.salary}</p>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">Tajriba: {vacancy.experience}</p>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 mt-2">{vacancy.description}</p>
-                </div>
-                <Button
-                  onClick={() => handleOpenVacancyDetails(vacancy)}
-                  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white w-full"
-                >
-                  Batafsil
-                </Button>
-              </Card>
+                vacancy={vacancy}
+                handleToggleFavorite={handleToggleFavorite}
+                handleOpenVacancyDetails={handleOpenVacancyDetails}
+              />
             ))
           )}
         </div>
@@ -452,10 +457,14 @@ const HomePage: React.FC = () => {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 text-black dark:text-white">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              <DialogTitle className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {" "}
+                {/* Mobil uchun text-xl */}
                 {selectedVacancy.direction}
               </DialogTitle>
-              <DialogDescription className="text-gray-600 dark:text-gray-400">
+              <DialogDescription className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                {" "}
+                {/* Mobil uchun text-sm */}
                 {selectedVacancy.province}, {selectedVacancy.district} | {selectedVacancy.salary}
               </DialogDescription>
             </DialogHeader>
@@ -463,43 +472,60 @@ const HomePage: React.FC = () => {
             {/* Qolgan dialog kontenti shu yerda davom etadi */}
             <div className="py-4 space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Talablar:</h3>
-                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 ml-4">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200">Talablar:</h3>{" "}
+                {/* Mobil uchun text-base */}
+                <ul className="list-disc list-inside text-sm sm:text-base text-gray-700 dark:text-gray-300 ml-4">
+                  {" "}
+                  {/* Mobil uchun text-sm */}
                   {selectedVacancy.requirements.map((req, index) => (
                     <li key={index}>{req}</li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Afzalliklari:</h3>
-                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 ml-4">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200">Afzalliklari:</h3>{" "}
+                {/* Mobil uchun text-base */}
+                <ul className="list-disc list-inside text-sm sm:text-base text-gray-700 dark:text-gray-300 ml-4">
+                  {" "}
+                  {/* Mobil uchun text-sm */}
                   {selectedVacancy.benefits.map((ben, index) => (
                     <li key={index}>{ben}</li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Ish jadvali:</h3>
-                <p className="text-gray-700 dark:text-gray-300">{selectedVacancy.schedule}</p>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200">Ish jadvali:</h3>{" "}
+                {/* Mobil uchun text-base */}
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300">{selectedVacancy.schedule}</p>{" "}
+                {/* Mobil uchun text-sm */}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Tavsif:</h3>
-                <p className="text-gray-700 dark:text-gray-300">{selectedVacancy.description}</p>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200">Tavsif:</h3>{" "}
+                {/* Mobil uchun text-base */}
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                  {selectedVacancy.description}
+                </p>{" "}
+                {/* Mobil uchun text-sm */}
               </div>
 
               {selectedVacancy.testQuestions && selectedVacancy.testQuestions.length > 0 && (
                 <div className="mt-6 p-4 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800">
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Test savollari:</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                    Test savollari:
+                  </h3>{" "}
+                  {/* Mobil uchun text-base */}
                   {selectedVacancy.testQuestions.map((q, qIndex) => (
                     <div key={qIndex} className="mb-4">
-                      <p className="font-medium text-gray-900 dark:text-gray-100 mb-2">
+                      <p className="font-medium text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-2">
+                        {" "}
+                        {/* Mobil uchun text-sm */}
                         {qIndex + 1}. {q.question}
                       </p>
                       <div className="space-y-2">
                         {q.options.map((option, oIndex) => (
                           <label
                             key={oIndex}
-                            className="flex items-center text-gray-700 dark:text-gray-300 cursor-pointer"
+                            className="flex items-center text-sm sm:text-base text-gray-700 dark:text-gray-300 cursor-pointer" // Mobil uchun text-sm
                           >
                             <input
                               type="radio"
@@ -517,14 +543,15 @@ const HomePage: React.FC = () => {
                   ))}
                   <Button
                     onClick={handleSubmitTest}
-                    className="mt-4 bg-green-600 hover:bg-green-700 text-white"
+                    className="mt-4 bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base" // Mobil uchun text-sm
                     disabled={Object.keys(userAnswers).length !== selectedVacancy.testQuestions.length}
                   >
                     Testni yakunlash
                   </Button>
-
                   {showApplyMessage && (
-                    <div className="mt-4 p-3 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-md">
+                    <div className="mt-4 p-3 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-md text-sm sm:text-base">
+                      {" "}
+                      {/* Mobil uchun text-sm */}
                       <p className="font-semibold mb-2">Test natijasi:</p>
                       <p>
                         Siz {selectedVacancy.testQuestions.length} savoldan {testResult} tasiga to'g'ri javob berdingiz.
@@ -538,12 +565,13 @@ const HomePage: React.FC = () => {
                           </p>
                           <Button
                             onClick={handleSendResume}
-                            className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white"
+                            className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white text-sm sm:text-base" // Mobil uchun text-sm
                             disabled={isApplying}
                           >
                             {isApplying ? "Yuborilmoqda..." : "Rezyume yuborish"}
                           </Button>
-                          {applyError && <p className="text-red-500 mt-2">{applyError}</p>}
+                          {applyError && <p className="text-red-500 mt-2 text-sm sm:text-base">{applyError}</p>}{" "}
+                          {/* Mobil uchun text-sm */}
                         </div>
                       ) : (
                         <p className="text-red-700 dark:text-red-300 font-bold mt-4">
@@ -557,7 +585,9 @@ const HomePage: React.FC = () => {
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline" onClick={handleCloseDialog}>
+              <Button variant="outline" onClick={handleCloseDialog} className="text-sm sm:text-base">
+                {" "}
+                {/* Mobil uchun text-sm */}
                 Yopish
               </Button>
             </div>
@@ -569,3 +599,143 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
+// Yangi Card komponentasi
+interface CardComponentProps {
+  vacancy: Vacancy;
+  handleToggleFavorite: (id: string) => void;
+  handleOpenVacancyDetails: (vacancy: Vacancy) => void;
+}
+
+const CardComponent: React.FC<CardComponentProps> = ({ vacancy, handleToggleFavorite, handleOpenVacancyDetails }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [glitterPosition, setGlitterPosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setGlitterPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    }
+  };
+
+  const calculateTransform = (e: React.MouseEvent<HTMLDivElement>, intensity: number = 5) => {
+    if (!cardRef.current) return "translateZ(0)";
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+    const y = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+    return `perspective(1000px) rotateX(${-y * intensity}deg) rotateY(${x * intensity}deg) translateZ(10px)`;
+  };
+
+  return (
+    <Card
+      ref={cardRef}
+      className={`
+        relative overflow-hidden
+        bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-gray-800 dark:to-gray-950
+        text-gray-900 dark:text-white
+        shadow-2xl rounded-2xl p-4 sm:p-7 flex flex-col justify-between // Mobil uchun paddingni kamaytirdim
+        transform transition-all duration-500 ease-out
+        hover:scale-[1.04] hover:shadow-3xl
+        group
+      `}
+      style={isHovered ? { transform: `scale(1.04)` } : {}}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Glitter effekti */}
+      {isHovered && (
+        <div
+          className="absolute inset-0 z-0 opacity-20 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle at ${glitterPosition.x}px ${glitterPosition.y}px, rgba(255,255,255,0.4) 0%, transparent 70%)`,
+          }}
+        ></div>
+      )}
+
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10">
+        {" "}
+        {/* Mobil uchun joylashuvni o'zgartirdim */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => handleToggleFavorite(vacancy.id)}
+          className="relative text-gray-400 hover:text-red-500 transition-colors duration-300 group w-8 h-8 sm:w-10 sm:h-10" // Tugma hajmini mobil uchun sozladim
+        >
+          <Heart
+            className={
+              vacancy.isFavorite
+                ? "fill-red-500 text-red-500 animate-heart-beat w-5 h-5 sm:w-6 sm:h-6" // Ikona hajmini sozladim
+                : "text-gray-400 group-hover:scale-125 transition-transform duration-300 w-5 h-5 sm:w-6 sm:h-6" // Ikona hajmini sozladim
+            }
+          />
+          {vacancy.isFavorite && (
+            <span className="absolute -top-0 -right-0 flex h-2 w-2 sm:h-3 sm:w-3">
+              {" "}
+              {/* Ping hajmini mobil uchun sozladim */}
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 sm:h-3 sm:w-3 bg-red-500"></span>
+            </span>
+          )}
+        </Button>
+      </div>
+
+      <div
+        className="flex-grow flex flex-col justify-between"
+        style={isHovered ? { transform: `translateZ(20px)` } : {}}
+      >
+        <div>
+          <CardTitle className="text-xl sm:text-3xl font-extrabold text-blue-700 dark:text-blue-300 mb-2 sm:mb-3 flex items-center transition-transform duration-300">
+            {" "}
+            {/* Mobil uchun text-xl */}
+            <BookOpen className="inline-block mr-2 w-6 h-6 sm:w-8 sm:h-8 text-blue-600 dark:text-blue-400 transform group-hover:rotate-6 transition-transform duration-300" />{" "}
+            {/* Ikona hajmini sozladim */}
+            {vacancy.direction}
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-base text-gray-700 dark:text-gray-300 flex items-center mb-1 sm:mb-2 transition-transform duration-300">
+            {" "}
+            {/* Mobil uchun text-sm */}
+            <MapPin className="inline-block mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 transform group-hover:-translate-y-0.5 transition-transform duration-300" />{" "}
+            {/* Ikona hajmini sozladim */}
+            {vacancy.province}, {vacancy.district}
+          </CardDescription>
+          <p className="mt-2 sm:mt-3 text-lg sm:text-2xl font-bold text-green-700 dark:text-green-400 flex items-center transition-transform duration-300">
+            {" "}
+            {/* Mobil uchun text-lg */}
+            <DollarSign className="inline-block mr-2 w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-300 transform group-hover:scale-110 transition-transform duration-300" />{" "}
+            {/* Ikona hajmini sozladim */}
+            {vacancy.salary}
+          </p>
+          <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 flex items-center mt-1 sm:mt-2 transition-transform duration-300">
+            {" "}
+            {/* Mobil uchun text-sm */}
+            <Briefcase className="inline-block mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 transform group-hover:translate-x-0.5 transition-transform duration-300" />{" "}
+            {/* Ikona hajmini sozladim */}
+            Tajriba: {vacancy.experience}
+          </p>
+          <p className="text-sm sm:text-base text-gray-800 dark:text-gray-200 line-clamp-3 sm:line-clamp-4 mt-3 sm:mt-4 leading-relaxed transition-transform duration-300">
+            {" "}
+            {/* Mobil uchun text-sm, line-clamp-3 */}
+            <Clock className="inline-block mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400" />{" "}
+            {/* Ikona hajmini sozladim */}
+            {vacancy.description}
+          </p>
+        </div>
+        <Button
+          onClick={() => handleOpenVacancyDetails(vacancy)}
+          className="
+            mt-4 sm:mt-6 w-full py-2 sm:py-3 text-base sm:text-lg font-semibold rounded-xl // Mobil uchun padding va text hajmini kamaytirdim
+            bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700
+            text-white shadow-lg hover:shadow-xl
+            transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.01]
+            relative overflow-hidden
+          "
+        >
+          <span className="relative z-10">Batafsil ko'rish</span>
+          <span className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 group-hover:opacity-10"></span>
+        </Button>
+      </div>
+    </Card>
+  );
+};

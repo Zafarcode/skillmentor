@@ -45,7 +45,7 @@ const FavoritesPage: React.FC = () => {
         style={{ top: `${NAVBAR_HEIGHT}px` }}
       >
         <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-black dark:text-white">Saqlangan Vakansiyalar</h1>
+          <h1 className="text-3xl text-center font-bold text-black dark:text-white">Saqlangan Vakansiyalar</h1>
         </div>
       </div>
 

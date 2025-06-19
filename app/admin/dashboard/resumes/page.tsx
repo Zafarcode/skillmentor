@@ -1,180 +1,297 @@
-// app/dashboard/resumes/page.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getApplications } from "@/lib/storage"; // getApplications import qilindi
-import { LocalApplication } from "@/types"; // LocalApplication import qilindi
-import { Loader2 } from "lucide-react"; // Loader2 ikonkasi lucide-react dan olingan
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Linkedin, Mail, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
 
-const ResumesPage: React.FC = () => {
-  const [applications, setApplications] = useState<LocalApplication[]>([]);
+type ProfileData = {
+  userId: number;
+  email: string;
+  fullname: string;
+  age: number;
+  experienceyears: number;
+  education: string;
+  phone: string;
+  telegram: string;
+  linkedin: string;
+  aboutme: string;
+  skills: string;
+  desiredposition: string;
+  expectedsalary: string;
+  preferredprovince: string;
+  preferreddistrict: string;
+  readytorelocate: boolean;
+};
+
+const ResumePage = () => {
+  const [profile, setProfile] = useState<ProfileData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      setLoading(true);
-      const storedApplications = getApplications();
-      setApplications(storedApplications);
-    } catch (err) {
-      console.error("Failed to load applications from localStorage:", err);
-      setError("Rezyumelarni yuklashda xatolik yuz berdi (lokal).");
-    } finally {
-      setLoading(false);
-    }
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/profile`, {
+          cache: "no-store", // Har safar so‘rov qilish uchun
+        });
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("API dan profilni olishda xatolik:", res.statusText, errorText);
+          setError("Ma'lumotlarni yuklashda xatolik yuz berdi. Iltimos, keyinroq urinib ko'ring.");
+          return;
+        }
+        const data: ProfileData[] = await res.json();
+        setProfile(data);
+      } catch (error) {
+        console.error("Profilni olishda xatolik:", error);
+        setError("Tarmoq xatosi yoki serverga ulanishda muammo yuz berdi.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        <Loader2 className="h-8 w-8 animate-spin mr-2" />
-        <span>Rezyumelar yuklanmoqda...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 text-red-600 dark:text-red-400">
-        <p>{error}</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Yuborilgan Rezyumelar</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-850 p-6 md:p-10 lg:p-12 font-sans">
+      <Card className="w-full max-w-5xl mx-auto bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-3xl rounded-2xl overflow-hidden animate-fade-in">
+        <CardHeader className="relative p-8 md:p-12 text-white text-center overflow-hidden bg-gradient-to-br from-blue-700 to-purple-800">
+          {/* Background overlay for subtle effect */}
+          <div className="absolute inset-0 opacity-10 bg-[url('/path/to/subtle-pattern.svg')] dark:bg-[url('/path/to/dark-subtle-pattern.svg')]"></div>
+          <div className="relative z-10">
+            {profile.length > 0 && (
+              <>
+                <CardTitle className="text-5xl md:text-6xl font-extrabold tracking-tight mb-2 drop-shadow-lg leading-tight">
+                  {profile[0].fullname}
+                </CardTitle>
+                <p className="text-blue-100 text-2xl font-medium mt-2 drop-shadow">
+                  {profile[0].desiredposition || "Mutaxassis"}
+                </p>
+              </>
+            )}
+            {!profile.length && !loading && !error && (
+              <CardTitle className="text-5xl md:text-6xl font-extrabold tracking-tight mb-2 drop-shadow-lg leading-tight">
+                Rezyume Mavjud Emas
+              </CardTitle>
+            )}
+            {loading && (
+              <CardTitle className="text-5xl md:text-6xl font-extrabold tracking-tight mb-2 drop-shadow-lg leading-tight">
+                Yuklanmoqda...
+              </CardTitle>
+            )}
+            {error && (
+              <CardTitle className="text-5xl md:text-6xl font-extrabold tracking-tight mb-2 drop-shadow-lg leading-tight">
+                Xatolik
+              </CardTitle>
+            )}
+          </div>
+        </CardHeader>
 
-      {applications.length === 0 ? (
-        <div className="text-center py-10 text-gray-600 dark:text-gray-300">
-          <p>Hozircha hech qanday rezyume yuborilmagan.</p>
-        </div>
-      ) : (
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="p-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Rezyumelar Ro'yxati</h2>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Yuborilgan barcha rezyumelarni ko'ring.</p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-[150px]"
-                  >
-                    Vakansiya
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                  >
-                    Foydalanuvchi
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                  >
-                    Aloqa
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                  >
-                    Test Natijasi
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                  >
-                    Ma'lumotlar
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-                  >
-                    Yuborilgan sana
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {applications.map((app) => (
-                  <tr key={app.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 dark:text-blue-400">
-                      {app.vacancyDirection}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                      <p className="font-semibold">{app.userProfile.fullName}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{app.userProfile.userId}</p>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                      <p>{app.userProfile.email}</p>
-                      <p>{app.userProfile.phoneNumber}</p>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {app.testScore !== null ? (
+        {loading ? (
+          <CardContent className="p-8 text-center text-gray-600 dark:text-gray-300 text-xl">
+            Ma'lumotlar yuklanmoqda... Iltimos kuting.
+            <div className="mt-4 flex justify-center items-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            </div>
+          </CardContent>
+        ) : error ? (
+          <CardContent className="p-8 text-center text-red-600 dark:text-red-400 text-xl">{error}</CardContent>
+        ) : profile.length > 0 ? (
+          profile.map((userProfile, index) => (
+            <CardContent
+              key={index}
+              className="p-8 md:p-10 space-y-10 border-b border-gray-100 dark:border-gray-700 last:border-none"
+            >
+              {/* Shaxsiy ma'lumotlar */}
+              <section className="animate-fade-in-up">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 dark:border-blue-700 pb-2">
+                  Shaxsiy ma'lumotlar
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-6 text-lg">
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Ism Familiya</p>
+                    <p className="text-xl font-semibold mt-1 text-gray-800 dark:text-gray-200">
+                      {userProfile.fullname}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Yosh</p>
+                    <p className="text-xl font-semibold mt-1 text-gray-800 dark:text-gray-200">
+                      {userProfile.age ? `${userProfile.age} yosh` : "Noma'lum"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Tajriba</p>
+                    <p className="text-xl font-semibold mt-1 text-gray-800 dark:text-gray-200">
+                      {userProfile.experienceyears ? `${userProfile.experienceyears} yil` : "Yo'q"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Ma'lumot</p>
+                    <p className="text-xl font-semibold mt-1 text-gray-800 dark:text-gray-200">
+                      {userProfile.education || "Kiritilmagan"}
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* Bog'lanish */}
+              <section className="animate-fade-in-up delay-100">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 dark:border-blue-700 pb-2">
+                  Bog'lanish
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+                  <div className="flex items-center space-x-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <Mail className="w-7 h-7 text-blue-500 flex-shrink-0" />
+                    <p className="text-gray-800 dark:text-gray-200 break-words">
+                      {userProfile.email || "Kiritilmagan"}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <Phone className="w-7 h-7 text-green-500 flex-shrink-0" />
+                    <p className="text-gray-800 dark:text-gray-200">{userProfile.phone || "Kiritilmagan"}</p>
+                  </div>
+                  <div className="flex items-center space-x-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                    {userProfile.telegram ? (
+                      <a
+                        href={`https://t.me/${userProfile.telegram.replace("@", "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-4 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 transition-colors"
+                      >
+                        {/* Inline SVG for better control, or ensure /icons/telegram.svg exists */}
+                        <svg
+                          className="w-7 h-7 flex-shrink-0"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.71 7.23L11.51 15.6c-.19.19-.45.3-.72.3s-.53-.11-.72-.3L7.33 12.16c-.32-.32-.32-.84 0-1.16s.84-.32 1.16 0L11 13.48l4.47-4.47c.32-.32.84-.32 1.16 0s.32.84 0 1.16z" />
+                        </svg>
+                        <p className="break-words">{userProfile.telegram}</p>
+                      </a>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-7 h-7 text-gray-500 dark:text-gray-400 flex-shrink-0"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.71 7.23L11.51 15.6c-.19.19-.45.3-.72.3s-.53-.11-.72-.3L7.33 12.16c-.32-.32-.32-.84 0-1.16s.84-.32 1.16 0L11 13.48l4.47-4.47c.32-.32.84-.32 1.16 0s.32.84 0 1.16z" />
+                        </svg>
+                        <p className="text-gray-500 dark:text-gray-400">Kiritilmagan</p>
+                      </>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                    {userProfile.linkedin ? (
+                      <a
+                        href={userProfile.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-4 text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-200 transition-colors"
+                      >
+                        <Linkedin className="w-7 h-7 flex-shrink-0" />
+                        <p className="truncate break-all">{userProfile.linkedin}</p>
+                      </a>
+                    ) : (
+                      <>
+                        <Linkedin className="w-7 h-7 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                        <p className="text-gray-500 dark:text-gray-400">Kiritilmagan</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </section>
+
+              {/* Men haqimda */}
+              <section className="animate-fade-in-up delay-200">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 dark:border-blue-700 pb-2">
+                  Men haqimda
+                </h2>
+                <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg whitespace-pre-line">
+                    {userProfile.aboutme || "Kiritilmagan"}
+                  </p>
+                </div>
+              </section>
+
+              {/* Ko‘nikmalar */}
+              <section className="animate-fade-in-up delay-300">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 dark:border-blue-700 pb-2">
+                  Ko'nikmalar
+                </h2>
+                <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                  {userProfile.skills ? (
+                    <div className="flex flex-wrap gap-2">
+                      {userProfile.skills.split(",").map((skill, i) => (
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${app.testScore >= 50 ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"}`}
+                          key={i}
+                          className="bg-blue-100 dark:bg-blue-700 text-blue-800 dark:text-blue-100 px-3 py-1 rounded-full text-sm font-medium shadow-sm"
                         >
-                          {app.testScore.toFixed(2)}%
+                          {skill.trim()}
                         </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">Kiritilmagan</p>
+                  )}
+                </div>
+              </section>
+
+              {/* Ish Talablari */}
+              <section className="animate-fade-in-up delay-400">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-700 dark:text-blue-400 border-b-2 border-blue-200 dark:border-blue-700 pb-2">
+                  Qidirilayotgan ish
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                  <div>
+                    <strong className="block text-gray-600 dark:text-gray-400 text-sm mb-1">Lavozim:</strong>
+                    <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                      {userProfile.desiredposition || "Kiritilmagan"}
+                    </p>
+                  </div>
+                  <div>
+                    <strong className="block text-gray-600 dark:text-gray-400 text-sm mb-1">Kutilayotgan oylik:</strong>
+                    <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                      {userProfile.expectedsalary || "Kiritilmagan"}
+                    </p>
+                  </div>
+                  <div>
+                    <strong className="block text-gray-600 dark:text-gray-400 text-sm mb-1">
+                      Afzal ko'rgan hudud:
+                    </strong>
+                    <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                      {userProfile.preferredprovince || "Kiritilmagan"}
+                      {userProfile.preferreddistrict ? `, ${userProfile.preferreddistrict}` : ""}
+                    </p>
+                  </div>
+                  <div>
+                    <strong className="block text-gray-600 dark:text-gray-400 text-sm mb-1">
+                      Ko'chishga tayyormi:
+                    </strong>
+                    <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                      {userProfile.readytorelocate ? (
+                        <span className="text-green-600 dark:text-green-400">Ha</span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                          Natija yo'q
-                        </span>
+                        <span className="text-red-600 dark:text-red-400">Yo'q</span>
                       )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                      <p className="text-xs text-gray-700 dark:text-gray-300">
-                        <span className="font-medium">Tajriba:</span>{" "}
-                        {app.userProfile.experienceYears !== null
-                          ? `${app.userProfile.experienceYears} yil`
-                          : "Noma'lum"}
-                      </p>
-                      <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">
-                        <span className="font-medium">Ma'lumoti:</span> {app.userProfile.education || "Noma'lum"}
-                      </p>
-                      {app.userProfile.skills && app.userProfile.skills.length > 0 && (
-                        <div className="mt-2">
-                          <span className="font-medium text-xs">Ko'nikmalar:</span>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {app.userProfile.skills.map((skill, i) => (
-                              <span
-                                key={i}
-                                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      {app.userProfile.resumeLink && (
-                        <a
-                          href={app.userProfile.resumeLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-500 hover:underline text-sm block mt-2"
-                        >
-                          Rezyume Linki
-                        </a>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-gray-100">
-                      {new Date(app.submittedAt).toLocaleDateString()}
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {new Date(app.submittedAt).toLocaleTimeString()}
-                      </p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+                    </p>
+                  </div>
+                </div>
+              </section>
+            </CardContent>
+          ))
+        ) : (
+          <CardContent className="p-8 text-center text-gray-600 dark:text-gray-300 text-xl">
+            Hali hech qanday rezyume yuklanmagan.
+          </CardContent>
+        )}
+      </Card>
     </div>
   );
 };
 
-export default ResumesPage;
+export default ResumePage;
