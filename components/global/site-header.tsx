@@ -31,22 +31,14 @@ const SiteHeader = () => {
 
   return (
     <header className="sticky top-0 left-0 right-0 z-50 py-3 bg-white dark:bg-black shadow-md">
-      {" "}
-      {/* py-4 dan py-3 ga o'zgartirildi, yuqoridan/pastdan paddingni kamaytirish uchun */}
       <div className="container mx-auto px-3 sm:px-4">
-        {" "}
-        {/* px-4 dan px-3 ga o'zgartirildi, chekkalardan paddingni kamaytirish uchun */}
         {/* Asosiy Flex Konteyner: Barcha navigatsiya elementlari uchun */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-nowrap overflow-x-auto scrollbar-hide whitespace-nowrap">
-          {" "}
-          {/* gap-3 dan gap-2 ga, sm:gap-3 ga o'zgartirildi. whitespace-nowrap qo'shildi. */}
+        {/* 'flex-nowrap overflow-x-auto scrollbar-hide whitespace-nowrap' olib tashlandi */}
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          {/* justify-between qo'shildi */}
           {/* SkillMentor logotipi - chap tomonda */}
           <Link className="flex-shrink-0 text-base sm:text-xl" href="/">
-            {" "}
-            {/* text-xl dan text-base ga o'zgartirildi, sm uchun text-xl */}
             <h1 className="text-xl sm:text-2xl font-extrabold leading-tight md:text-4xl">
-              {" "}
-              {/* text-2xl dan text-xl ga, sm uchun text-2xl */}
               <span className="text-blue-700 dark:text-blue-500">Skill</span>
               <span className="text-gray-900 dark:text-white">Mentor</span>
             </h1>
@@ -56,13 +48,10 @@ const SiteHeader = () => {
             {/* Bu yerda kattaroq ekranlar uchun menyu elementlari bo'lishi mumkin */}
           </div>
           {/* O'ng tarafdagi tugmalar: Sevimlilar, Tema almashtirgich, Profil */}
-          <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
-            {" "}
-            {/* gap-3 dan gap-2 ga o'zgartirildi */}
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Sevimlilar tugmasi */}
             <Link className="bg-transparent flex-shrink-0" href="/favorites">
-              <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-300 hover:text-red-500 transition-colors" />{" "}
-              {/* Ikonaning o'lchami w-5 h-5 ga o'zgartirildi, sm uchun w-6 h-6 */}
+              <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-300 hover:text-red-500 transition-colors" />
             </Link>
             {/* Dark/Light Mode tugmasi */}
             <div className="flex-shrink-0">
@@ -72,7 +61,7 @@ const SiteHeader = () => {
             <Button
               variant="secondary"
               className="flex-shrink-0 bg-white border-2 border-gray-300 text-gray-900 hover:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600
-                         min-w-[60px] sm:min-w-[80px] h-[32px] sm:h-[36px] flex items-center justify-center transition-colors duration-200 px-2 text-xs sm:text-sm" /* min-w, h, px va text-size yanada kichraytirildi */
+                         min-w-[60px] sm:min-w-[80px] h-[32px] sm:h-[36px] flex items-center justify-center transition-colors duration-200 px-2 text-xs sm:text-sm"
               onClick={toggleProfile}
             >
               <Link href={"/profile"} className="w-full text-center font-medium">
