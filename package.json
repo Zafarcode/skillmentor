@@ -16,13 +16,13 @@
     "build": "next build",
     "start": "next start",
     "eslint": "next lint --fix",
-    "prettier": "prettier --write .",
-    "lint": "bun eslint && bun prettier",
-    "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore"
+    "prettier": "npx prettier --write .",
+    "lint": "npx eslint . && npx prettier --check .",
+    "format": "npx eslint . --fix && npx prettier '**/*.{json,yaml}' --write --ignore-path .gitignore"
   },
   "lint-staged": {
-    "*.{js,jsx,md,ts,tsx,html,css,scss}": "bun prettier",
-    "*.{js,jsx,ts,tsx}": "eslint --cache --fix --cache-location ./node_modules/.cache/.eslintcache"
+    "*.{js,jsx,md,ts,tsx,html,css,scss}": "npx prettier --write",
+    "*.{js,jsx,ts,tsx}": "npx eslint --cache --fix --cache-location ./node_modules/.cache/.eslintcache"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.1",
@@ -58,12 +58,11 @@
     "@types/pg": "^8.15.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-   
-    "@typescript-eslint/eslint-plugin": "^7.18.0", 
-    "@typescript-eslint/parser": "^7.18.0",   
-    "eslint": "^8.57.0",                    
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-next": "^14.2.7",             
+    "eslint-config-next": "^14.2.7",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
@@ -72,7 +71,6 @@
     "postcss": "^8",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.5.4"                     
-  },
-  "packageManager": "bun@1.1.26"
+    "typescript": "^5.5.4"
+  }
 }
